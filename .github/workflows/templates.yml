@@ -7,6 +7,11 @@ on:
       - 'src/**'
       - 'tests/**'
       - 'README.md'
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/**'
   workflow_dispatch:
 
 permissions:
@@ -14,19 +19,39 @@ permissions:
 
 jobs:
   test:
+    outputs:
+      version_changed: ${{ steps.version.outputs.changed }}
     # macos-26 runners do not support docker desktop nested virtualization
     # see https://github.com/marketplace/actions/setup-docker-desktop-macos#supported-runners
     runs-on: ubuntu-24.04-arm
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v6
         with:
           node-version: 24
+      - id: version
+        if: github.event_name == 'push'
+        env:
+          BEFORE_SHA: ${{ github.event.before }}
+        run: |
+          node <<'NODE'
+          const { execFileSync } = require('node:child_process');
+          const { appendFileSync, readFileSync } = require('node:fs');
+          const path = 'src/python311-node24/devcontainer-template.json';
+          const current = JSON.parse(readFileSync(path, 'utf8')).version;
+          let previous;
+          if (!/^0+$/.test(process.env.BEFORE_SHA)) {
+            previous = JSON.parse(execFileSync('git', ['show', `${process.env.BEFORE_SHA}:${path}`], { encoding: 'utf8' })).version;
+          }
+          appendFileSync(process.env.GITHUB_OUTPUT, `changed=${current !== previous}\n`);
+          NODE
       - run: npm install --global @devcontainers/cli@0.89.0
       - run: bash tests/test-python311-node24.sh
 
   publish:
-    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.test.outputs.version_changed == 'true'
     needs: test
     runs-on: ubuntu-latest
     permissions:
