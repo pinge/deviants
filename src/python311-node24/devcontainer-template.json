@@ -1,6 +1,6 @@
 {
   "id": "python311-node24",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "name": "Python 3.11 + Node 24 (arm64)",
   "description": "Python 3.11 and Node 24 dev container with Claude, Codex and Muse."
 }

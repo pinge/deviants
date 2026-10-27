@@ -23,6 +23,7 @@ permissions:
 
 jobs:
   test:
+    timeout-minutes: 5
     outputs:
       version_bumped: ${{ steps.version.outputs.bumped }}
     # macos-26 runners do not support docker desktop nested virtualization
@@ -57,6 +58,7 @@ jobs:
   publish:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.test.outputs.version_bumped == 'true'
     needs: test
+    timeout-minutes: 1
     runs-on: ubuntu-latest
     permissions:
       contents: write
