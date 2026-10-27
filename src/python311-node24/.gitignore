@@ -1,0 +1,4 @@
+.devcontainer/.claude/
+.devcontainer/.codex/
+.devcontainer/.muse-data/
+.devcontainer/.env

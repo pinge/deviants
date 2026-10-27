@@ -1,0 +1,43 @@
+name: Dev Container Templates
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/**'
+      - 'src/**'
+      - 'tests/**'
+      - 'README.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    # macos-26 runners do not support docker desktop nested virtualization
+    # see https://github.com/marketplace/actions/setup-docker-desktop-macos#supported-runners
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - run: npm install --global @devcontainers/cli@0.89.0
+      - run: bash tests/test-python311-node24.sh
+
+  publish:
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v6
+      - uses: devcontainers/action@v1.4.4
+        with:
+          publish-templates: 'true'
+          base-path-to-templates: './src'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

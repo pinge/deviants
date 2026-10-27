@@ -1,0 +1,15 @@
+prefix_rule(
+    pattern = ["rm"],
+    decision = "prompt",
+    justification = "Require approval before running rm commands.",
+)
+prefix_rule(
+    pattern = ["/usr/bin/rm"],
+    decision = "prompt",
+    justification = "Require approval before running rm commands.",
+)
+prefix_rule(
+    pattern = ["/bin/rm"],
+    decision = "prompt",
+    justification = "Require approval before running rm commands.",
+)

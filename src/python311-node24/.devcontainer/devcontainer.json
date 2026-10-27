@@ -1,0 +1,95 @@
+{
+  "name": "python311-node24-arm64",
+  "image": "mcr.microsoft.com/devcontainers/python:3.11-bookworm",
+  "containerEnv": {
+    "PDM_IGNORE_SAVED_PYTHON": "1",
+    "DISABLE_AUTOUPDATER": "1"
+  },
+  "initializeCommand": "bash \"${localWorkspaceFolder}/.devcontainer/initialize.sh\" \"${localWorkspaceFolder}\"",
+  "runArgs": [
+    "--env-file",
+    "${localWorkspaceFolder}/.devcontainer/.env"
+  ],
+  // change runArgs if you have permission issues running the muse agent with -disable-sandbox
+  // "runArgs": [
+  //   "--env-file",
+  //   "${localWorkspaceFolder}/.devcontainer/.env",
+  //   "--security-opt",
+  //   "seccomp=unconfined",
+  //   "--security-opt",
+  //   "apparmor=unconfined"
+  // ],
+  "remoteUser": "vscode",
+  "remoteEnv": {
+    "CLAUDE_CONFIG_DIR": "${containerWorkspaceFolder}/.devcontainer/.claude",
+    "CODEX_HOME": "${containerWorkspaceFolder}/.devcontainer/.codex"
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "24"
+    },
+    "ghcr.io/anthropics/devcontainer-features/claude-code:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "anthropic.claude-code",
+        "openai.chatgpt",
+        "MermaidChart.vscode-mermaid-chart"
+      ],
+      "settings": {
+        "editor.formatOnPaste": true,
+        "editor.formatOnSave": true,
+        "files.insertFinalNewline": true,
+        "files.trimFinalNewlines": true,
+        "editor.autoIndent": "full",
+        "workbench.editor.restoreViewState": true,
+        "terminal.integrated.copyOnSelection": true,
+        "editor.pasteAs.preferences": [
+          "text.updateImports"
+        ],
+        "js/ts.tsdk.promptToUseWorkspaceVersion": true,
+        "editor.codeActionsOnSave": {
+          "source.fixAll": "explicit",
+          "source.organizeImports": "never",
+          "source.sortMembers": "explicit"
+        },
+        "search.exclude": {
+          "**/node_modules": true,
+          "**/__pycache__": true,
+          "**/.pytest_cache": true,
+          "**/.mypy_cache": true,
+          "**/.ruff_cache": true,
+          "**/.tox": true,
+          "**/.nox": true,
+          "**/.venv": true,
+          "**/venv": true,
+          "**/.yarn": true,
+          "**/.pnp.*": true
+        },
+        "github.copilot.editor.enableAutoCompletions": true,
+        "github.copilot.advanced": {},
+        "github.copilot.chat.startDebugging.enabled": false,
+        "github.copilot.editor.enableCodeActions": false,
+        "notifications.silent": {
+          "GitHub.copilot": true,
+          "GitHub.copilot-chat": true
+        }
+      }
+    }
+  },
+  "postCreateCommand": "bash \"${containerWorkspaceFolder}/.devcontainer/post_create.sh\"",
+  "postStartCommand": "bash \"${containerWorkspaceFolder}/.devcontainer/restore_links.sh\"",
+  "forwardPorts": [1455, 1457],
+  "portsAttributes": {
+    "1455": {
+      "label": "Codex Login",
+      "requireLocalPort": true
+    },
+    "1457": {
+      "label": "Codex Login (fallback)",
+      "requireLocalPort": true
+    }
+  }
+}

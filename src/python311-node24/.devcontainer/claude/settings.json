@@ -1,0 +1,13 @@
+{
+  "model": "claude-opus-5-5",
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)"
+    ],
+    "ask": [
+      "Bash(rm *)",
+      "Bash(/usr/bin/rm *)",
+      "Bash(/bin/rm *)"
+    ]
+  }
+}

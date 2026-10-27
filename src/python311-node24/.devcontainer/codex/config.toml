@@ -1,0 +1,23 @@
+# Default Codex config TEMPLATE. Installed by post_create.sh as
+# $CODEX_HOME/config.toml (copy-if-absent: an existing config.toml is never
+# overwritten; auth lives in auth.json, untouched either way).
+#
+# __WORKSPACE_ROOT__ is substituted at install time with the actual
+# in-container workspace root (derived from this file's location, never
+# hardcoded).
+model = "gpt-5.6-sol"
+personality = "pragmatic"
+
+# Pre-trust the container workspace so Codex loads project-scoped config
+# without an interactive trust prompt on first run.
+[projects."__WORKSPACE_ROOT__"]
+trust_level = "trusted"
+
+# TUI keybindings: Enter inserts a newline, Ctrl+Enter submits.
+# Action names per codex-rs TUI keymap (composer.submit, editor.insert_newline);
+# key names use normalized strings (enter, ctrl-enter).
+[tui.keymap.composer]
+submit = "ctrl-enter"
+
+[tui.keymap.editor]
+insert_newline = "enter"
