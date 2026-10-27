@@ -46,6 +46,7 @@
         "editor.autoIndent": "full",
         "workbench.editor.restoreViewState": true,
         "terminal.integrated.copyOnSelection": true,
+        "terminal.integrated.hideOnStartup": "always",
         "editor.pasteAs.preferences": [
           "text.updateImports"
         ],
