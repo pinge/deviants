@@ -72,6 +72,7 @@ cleanup() {
 }
 trap cleanup EXIT
 
+# test template configuration, image build, and container launch
 cp -R "$TEMPLATE_DIR/." "$TEST_DIR/"
 mkdir -p "$TEST_DIR/.devcontainer/.claude"
 printf '{}\n' > "$TEST_DIR/.devcontainer/.claude/.claude.json"
@@ -79,8 +80,11 @@ devcontainer read-configuration --workspace-folder "$TEST_DIR" >/dev/null
 devcontainer build --workspace-folder "$TEST_DIR"
 devcontainer up --workspace-folder "$TEST_DIR"
 
+# assert time zone
 EXPECTED_TZ="$(sed -n 's/^TZ=//p' "$TEST_DIR/.devcontainer/.env")"
+
 test -n "$EXPECTED_TZ"
+# assert runtime versions, configuration files, and symlinks
 assert_runtime() {
   devcontainer exec --workspace-folder "$TEST_DIR" env "EXPECTED_TZ=$EXPECTED_TZ" bash -c '
 set -euo pipefail
@@ -108,6 +112,8 @@ cmp -s "$workspace_root/.devcontainer/muse/settings.json" /home/vscode/.config/m
 }
 
 assert_runtime
+
+# assert container name, workspace label, and image name
 CONTAINER_ID="$(docker ps -q --filter "label=devcontainer.local_folder=$TEST_DIR")"
 test -n "$CONTAINER_ID"
 test "$(printf '%s\n' "$CONTAINER_ID" | wc -l)" -eq 1
@@ -119,6 +125,8 @@ CONTAINER_REPOSITORY="${CONTAINER_IMAGE%:*}"
 [[ "$CONTAINER_NAME" =~ ^[[:alnum:]][[:alnum:]_.-]*$ ]]
 [[ "$CONTAINER_REPOSITORY" == "vsc-${TEST_NAME}-"*-features || "$CONTAINER_REPOSITORY" == "vsc-${TEST_NAME}-"*-features-uid ]]
 docker stop "$CONTAINER_ID" >/dev/null
+
+# assert setup and runtime state after restart
 devcontainer up --workspace-folder "$TEST_DIR"
 devcontainer run-user-commands --workspace-folder "$TEST_DIR"
 assert_runtime
