@@ -7,6 +7,8 @@
 # hardcoded).
 model = "gpt-5.6-sol"
 personality = "pragmatic"
+approval_policy = "never"
+sandbox_mode = "danger-full-access"
 
 # Pre-trust the container workspace so Codex loads project-scoped config
 # without an interactive trust prompt on first run.
