@@ -5,6 +5,6 @@
 - 📦 PDM 2.29.3
 - ✳️ Node.js 24
 - 🤖 Claude, Codex, and Muse
-- 🔐 Credentials and sessions persist per project across container rebuilds
+- 🔐 Credentials and sessions survive container rebuilds
 - 🌍 Container inherits the host time zone
 - ⚙️ Sane VS Code defaults
