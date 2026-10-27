@@ -85,11 +85,11 @@
   "portsAttributes": {
     "1455": {
       "label": "Codex Login",
-      "requireLocalPort": true
+      "requireLocalPort": false
     },
     "1457": {
       "label": "Codex Login (fallback)",
-      "requireLocalPort": true
+      "requireLocalPort": false
     }
   }
 }
