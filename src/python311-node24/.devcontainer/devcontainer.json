@@ -28,12 +28,15 @@
     "ghcr.io/devcontainers/features/node:1": {
       "version": "24"
     },
+    "ghcr.io/devcontainers/features/github-cli:1": {},
     "ghcr.io/anthropics/devcontainer-features/claude-code:1": {}
   },
   "customizations": {
     "vscode": {
       "extensions": [
         "ms-python.python",
+        "ms-python.vscode-pylance",
+        "charliermarsh.ruff",
         "anthropic.claude-code",
         "openai.chatgpt",
         "MermaidChart.vscode-mermaid-chart"
