@@ -47,5 +47,12 @@ mkdir -p /home/vscode/.config/muse
 if [ ! -f /home/vscode/.config/muse/settings.json ]; then
   cp "$CONFIG_DIR/muse/settings.json" /home/vscode/.config/muse/settings.json
 fi
+MUSE_SETTINGS=/home/vscode/.config/muse/settings.json
+# existing muse settings may lack the permissions schema version.
+# Named permission profiles are unavailable: missing field `schema_version` at line 3 column 3.
+if jq -e 'if (.permissions | type) == "object" then (.permissions | has("schema_version") | not) else false end' "$MUSE_SETTINGS" >/dev/null; then
+  MUSE_SETTINGS_JSON="$(jq '.permissions.schema_version = 1' "$MUSE_SETTINGS")"
+  printf '%s\n' "$MUSE_SETTINGS_JSON" > "$MUSE_SETTINGS"
+fi
 
 bash "$CONFIG_DIR/restore_links.sh"
