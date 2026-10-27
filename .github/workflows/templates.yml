@@ -23,6 +23,7 @@ permissions:
 
 jobs:
   test:
+    timeout-minutes: 5
     outputs:
       version_bumped: ${{ steps.version.outputs.bumped }}
     # macos-26 runners do not support docker desktop nested virtualization
